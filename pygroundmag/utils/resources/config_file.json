@@ -1,0 +1,4 @@
+{
+  "carisma": {"local_data_dir": "mag_data/",
+              "remote_data_dir": "http://data.carisma.ca/"}
+}
