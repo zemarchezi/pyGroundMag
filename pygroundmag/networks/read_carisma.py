@@ -5,7 +5,7 @@ import gzip
 import datetime
 from pygroundmag.utils.library_functions import *
 
-def readData(files, stations_list,usePyTplot, usePandas):
+def readData(files, stations_list, usePyTplot, usePandas):
     ######
     ## Abre os arquivos e extrai as componentes
     #

@@ -1,4 +1,6 @@
 {
   "carisma": {"local_data_dir": "mag_data/",
-              "remote_data_dir": "http://data.carisma.ca/"}
+              "remote_data_dir": "http://data.carisma.ca/"},
+  "embrace": {"local_data_dir": "mag_data/",
+              "remote_data_dir": "/home/jose/python_projects/spectrogramaPulsacoes/embrace_data/CXP/2021/22-29Mar"}
 }

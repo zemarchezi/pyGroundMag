@@ -1,7 +1,9 @@
 from pygroundmag.utils.dailynames import dailynames
 from pygroundmag.utils.download import download
 from pygroundmag.networks.read_carisma import *
+from pygroundmag.networks.read_embrace import *
 from pathlib import Path
+import glob
 
 # %%
 def load(trange: list = ['2018-11-5', '2018-11-6'],
@@ -29,15 +31,18 @@ def load(trange: list = ['2018-11-5', '2018-11-6'],
     out_files = []
     read_stations = []
     for stat in station:
-        if if_cdf:
-            pathformat = f"{magnetometer}/CDF{cadence}/%Y/%m/%d/CARISMA_{magnetometer}_{cadence.lower()}_{stat.lower()}_%Y%m%d_v01.cdf"
-        else:
-            pathformat = f"{magnetometer}/{cadence}/%Y/%m/%d/%Y%m%d{stat}.F01.gz"
-        # find the full remote path names using the trange
-        remote_names = dailynames(file_format=pathformat, trange=trange)
+        if network == 'carisma':
+            if if_cdf:
+                pathformat = f"{magnetometer}/CDF{cadence}/%Y/%m/%d/CARISMA_{magnetometer}_{cadence.lower()}_{stat.lower()}_%Y%m%d_v01.cdf"
+            else:
+                pathformat = f"{magnetometer}/{cadence}/%Y/%m/%d/%Y%m%d{stat}.F01.gz"
+            # find the full remote path names using the trange
+            remote_names = dailynames(file_format=pathformat, trange=trange)
 
-        files = download(remote_file=remote_names, remote_path=remote_path,
-                         local_path=local_path, no_download=no_update)
+            files = download(remote_file=remote_names, remote_path=remote_path,
+                             local_path=local_path, no_download=no_update)
+        if network == 'embrace':
+            files = glob.glob(f"{remote_path}/*.*m")
 
         if files is not None and len(files) > 0:
             read_stations.append(stat)
@@ -54,7 +59,11 @@ def load(trange: list = ['2018-11-5', '2018-11-6'],
 
     logging.info('Reading files')
     if len(out_files) > 0:
-        vars = readData(out_files, read_stations, usePyTplot, usePandas)
+        if network == 'carisma':
+            vars = readData(out_files, read_stations, usePyTplot=usePyTplot, usePandas=usePandas)
+        if network == 'embrace':
+            vars = readEmbrace(out_files, read_stations, usePyTplot=usePyTplot, usePandas=usePandas)
+
         return vars
 
     return []
