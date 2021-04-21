@@ -2,7 +2,7 @@
 from pygroundmag.utils.library_functions import *
 import pytplot
 import pandas as pd
-import logging
+from loguru import logger as logging
 #%%
 def readEmbrace(files, station_list, usePandas, usePyTplot):
     ######

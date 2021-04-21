@@ -6,7 +6,7 @@ from pathlib import Path
 import glob
 
 # %%
-def load(trange: list = ['2018-11-5', '2018-11-6'],
+def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
          magnetometer: str = 'FGM',
          cadence: str = '1Hz',
          station: list = ['FCHU'],
@@ -42,7 +42,9 @@ def load(trange: list = ['2018-11-5', '2018-11-6'],
             files = download(remote_file=remote_names, remote_path=remote_path,
                              local_path=local_path, no_download=no_update)
         if network == 'embrace':
-            files = glob.glob(f"{remote_path}/*.*m")
+            dasr = trange[0].split('-')
+            pathformat = f"{remote_path}/{stat}/{dasr[0]}_{dasr[1]}_{dasr[2]}*/*.*m"
+            files = glob.glob(pathformat)
 
         if files is not None and len(files) > 0:
             read_stations.append(stat)

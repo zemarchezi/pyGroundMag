@@ -2,7 +2,7 @@
 import os
 import warnings
 import requests
-import logging
+from loguru import logger as logging
 import fnmatch
 import datetime
 import pkg_resources

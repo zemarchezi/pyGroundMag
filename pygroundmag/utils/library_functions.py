@@ -4,9 +4,9 @@ import numpy as np
 from numpy import pi, cos, sin, arctan2, sqrt, dot
 import datetime
 import pandas as pd
-import aacgmv2
 import igrf12
-
+import pyIGRF
+import aacgmv2
 
 def normD(a):
     norm = 0
@@ -162,13 +162,29 @@ def geo2mag(incoord):
     # outcoord = np.vstack((mlat, mlon))
     return [mlat, (360.0 + mlon)]
 
-
-def convert_coords(year: int = 2019,
+#%%
+def convert_coords(date: str = '20210405',
                    lat_long: list = [],
                    altitude_km: float = 100.):
-    dt = pd.to_datetime(year)
+    dt = datetime.datetime.strptime(date, '%Y%m%d')
+    print(lat_long)
+    if dt.year <=2020:
+        mag = igrf12.igrf(dt, glat=float(lat_long[0]), glon=float(lat_long[1]), alt_km=altitude_km)
+        decl = mag['decl'].values[0]
+    else:
+        mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
+        mag = {'decl': mag[0],
+               'incl': mag[1],
+               'horiz': mag[2],
+               'north': mag[3],
+               'east': mag[4],
+               'down': mag[5],
+               'total': mag[6]
+        }
+        decl = mag['decl']
 
-    mag = igrf12.igrf(dt, glat=lat_long[0], glon=lat_long[1], alt_km=altitude_km)
+
+    # igrf13: d, i, h, x, y, z, f
 
     cgm_lat, cgm_lon, cgm_r = aacgmv2.convert_latlon(lat_long[0],
                                                      lat_long[1],
@@ -177,12 +193,10 @@ def convert_coords(year: int = 2019,
     if cgm_lon < 0:
         cgm_lon = 360 + cgm_lon
 
-    mlt_ut = aacgmv2.convert_mlt(cgm_lon, datetime.datetime(int(year), 1, 1, 0, 0, 0), m2a=False)
+    mlt_ut = aacgmv2.convert_mlt(cgm_lon, datetime.datetime(int(dt.year), 1, 1, 0, 0, 0), m2a=False)
     mlt = 24 - mlt_ut
 
     l_dip = 1. / (np.cos(np.deg2rad(cgm_lat)) ** 2.)
-
-    decl = mag['decl'].values[0]
 
     out_dict = {
         'cgm_latitude': cgm_lat,

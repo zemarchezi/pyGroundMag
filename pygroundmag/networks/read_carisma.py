@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-import logging
+from loguru import logger as logging
 import gzip
 import datetime
 from pygroundmag.utils.library_functions import *
@@ -47,7 +47,9 @@ def readData(files, stations_list, usePyTplot, usePandas):
             ## Open and read the x, y, and z compoents
             #
             logging.info(first_line)
-            dict_coords = convert_coords(year=int(reference_date[0:4]),
+            logging.warning(reference_date)
+            logging.warning([latitude_geo, longitude_geo])
+            dict_coords = convert_coords(date=reference_date,
                                          lat_long=[float(latitude_geo), float(longitude_geo)],
                                          altitude_km=100.)
 
@@ -69,19 +71,19 @@ def readData(files, stations_list, usePyTplot, usePandas):
 
             station_list = [station] * len(time)  # Create an list with the stations names
 
-            latitude_geo_list = [latitude_geo] * len(time)  # Create a list with the corresponding latitudes
-            cgm_latitude_list = [dict_coords['cgm_latitude']] * len(time)
-            cgm_longitude_list = [dict_coords['cgm_longitude']] * len(time)
-            l_McIlwain = [dict_coords['lshell']] * len(time)  # McIlwain parameter
+            latitude_geo_list = [float(latitude_geo)] * len(time)  # Create a list with the corresponding latitudes
+            cgm_latitude_list = [float(dict_coords['cgm_latitude'])] * len(time)
+            cgm_longitude_list = [float(dict_coords['cgm_longitude'])] * len(time)
+            l_McIlwain = [float(dict_coords['lshell'])] * len(time)  # McIlwain parameter
 
             ## Create an list with the components for each station
             t.extend(time)  # time array
-            x.extend(temp_x)  # x component
-            y.extend(temp_y)  # y component
-            z.extend(temp_z)  # z component
-            h.extend(temp_h)  # H component
-            mh.extend(temp_mh)  # mean variation of H component
-            d.extend(temp_d)
+            x.extend(temp_x.astype(float))  # x component
+            y.extend(temp_y.astype(float))  # y component
+            z.extend(temp_z.astype(float))  # z component
+            h.extend(temp_h.astype(float))  # H component
+            mh.extend(temp_mh.astype(float))  # mean variation of H component
+            d.extend(temp_d.astype(float))
             time_seconds.extend(time_sec)
             stations.extend(station_list)
             latitude.extend(latitude_geo_list)
@@ -102,7 +104,12 @@ def readData(files, stations_list, usePyTplot, usePandas):
 
         if usePandas == True:
             import pandas as pd
-            dd = pd.DataFrame(np.transpose([x, y, z, h, mh, d, stations, latitude, lshell, cgm_latitude, cgm_longitude, time_seconds]),
+            print('Using Pandas!')
+            daast = [x, y, z,
+                     h, mh, d, stations,
+                     latitude, lshell, cgm_latitude,
+                     cgm_longitude, time_seconds]
+            dd = pd.DataFrame(np.transpose(daast),
                               index=t, columns=['x', 'y', 'z', 'h', 'mean_h', 'd', 'stat', 'lat', 'lshell', 'gcm_lat', 'gcm_lon', 'time_seconds'])
             variables_dataframe[tplot_var] = dd
 
