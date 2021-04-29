@@ -13,20 +13,23 @@ import aacgmv2
 with open('/home/jose/python_projects/pyGroundMag/pygroundmag/utils/resources/config_file.json', 'r') as f:
     config_file = json.load(f)
 
+config_file['embrace']['usr'] = "jose.marchezi@inpe.br"
+config_file['embrace']['pwd'] = "JpM094621"
+
 #%%
 
 # stations=['RANK', 'ESKI', 'FCHU', 'BACK', 'GILL', 'OXFO', 'ISLL', 'LGRR', 'PINA', 'THRF', 'OSAK']
-stations=['ISLL']
-# stations = ['CXP']
+# stations=['ISLL']
+stations = ['SJC']
 
 # %%
 trange=['2021-04-05', '2021-04-06']
-varss = load_mag(trange=trange, magnetometer='FGM',
-             network='carisma',
+magnet = 'Magnetometer'
+varss_mag = load_mag(trange=trange, magnetometer=magnet,
+             network='embrace',
              cadence='1Hz', station=stations,
              if_cdf=False, downloadonly=False,
-             usePandas=True, config_file=config_file)
-
+             usePandas=True, usePyTplot=False, config_file=config_file)
 
 #%%
 dt = datetime.datetime.strptime('20210112', '%Y%m%d')

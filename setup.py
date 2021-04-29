@@ -27,7 +27,7 @@ setup(
     install_requires=['numpy>=1.20.2', 'requests', 'pytplot>=1.7.24',
                       'cdflib>=0.3.20', 'cdasws>=1.7.24', 'netCDF4',
                       'pywavelets', 'pyqtgraph>=0.11.1', 'aacgmv2',
-                      'igrf12', 'pyIGRF', 'loguru'],
+                      'igrf12', 'pyIGRF', 'loguru', 'selenium'],
     python_requires='>=3.6',
     include_package_data=True,
 )

@@ -1,5 +1,6 @@
 from pygroundmag.utils.dailynames import dailynames
 from pygroundmag.utils.download import download
+from pygroundmag.utils.download_embrace import downloadEmbrace
 from pygroundmag.networks.read_carisma import *
 from pygroundmag.networks.read_embrace import *
 from pathlib import Path
@@ -28,6 +29,8 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
     local_path = str(Path.home().joinpath(config_file[network]['local_data_dir'], network))
     logging.info(f'Local Download Path: {local_path}')
 
+
+
     out_files = []
     read_stations = []
     for stat in station:
@@ -42,9 +45,23 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
             files = download(remote_file=remote_names, remote_path=remote_path,
                              local_path=local_path, no_download=no_update)
         if network == 'embrace':
-            dasr = trange[0].split('-')
-            pathformat = f"{remote_path}/{stat}/{dasr[0]}_{dasr[1]}_{dasr[2]}*/*.*m"
-            files = glob.glob(pathformat)
+
+            # exectSele = str(Path.home().joinpath(config_file[network]['executable_path']))
+            #
+            # print(exectSele)
+
+            files = downloadEmbrace(url=remote_path,
+                     instrument=magnetometer, station=stat,
+                     username=config_file[network]['usr'],
+                     password=config_file[network]['pwd'],
+                     trange=trange,
+                     downloadDir=f'{local_path}/temp_download',
+                     localDirPath=f'{local_path}/mag',
+                     executable_path=config_file[network]['executable_path'])
+
+            # dasr = trange[0].split('-')
+            # pathformat = f"{remote_path}/{stat}/{dasr[0]}_{dasr[1]}_{dasr[2]}*/*.*m"
+            # files = glob.glob(pathformat)
 
         if files is not None and len(files) > 0:
             read_stations.append(stat)
