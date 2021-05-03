@@ -59,6 +59,7 @@ def readEmbrace(files, station_list, usePandas, usePyTplot):
 
         mag_dataFrame = pd.concat(out_dataFrame)
 
+        mag_dataFrame.sort_index(inplace=True)
         if usePandas == True:
             variables_dataframe[tplot_var] = mag_dataFrame
 

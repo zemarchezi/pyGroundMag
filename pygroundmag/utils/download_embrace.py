@@ -14,6 +14,8 @@ def extractFiles(file_list: list=[], localDirPath:str=''):
 
     outFilesList = []
 
+
+
     for i in file_list:
         logging.info(f'Opening {i}')
         with ZipFile(i, 'r') as zipObj:
@@ -68,7 +70,7 @@ def downloadEmbrace(url: str='',
     if not os.path.exists(downloadDir):
         os.makedirs(os.path.dirname(downloadDir))
 
-    filename = f"{downloadDir}/swdatashare-{trange[0]}-to-{trange[1]}.zip"
+    filename = f"{downloadDir}/{stationsDict[station]}_swdatashare-{trange[0]}-to-{trange[1]}.zip"
     if os.path.isfile(filename) == True:
         logging.info('File is current: ' + filename)
 
@@ -207,6 +209,15 @@ def downloadEmbrace(url: str='',
     logging.info(f'Compressed File downloaded to: {new_files}')
     driver.quit()
 
-    outFiles = extractFiles(file_list=new_files, localDirPath=localDirPath)
+    logging.info(f'Rename Files')
+    openFilesList = []
+    for ff in new_files:
+        filNAme = ff.split('/')[-1]
+        filNewName = f'{station}_{filNAme}'
+        newDirName = ff.replace(filNAme, filNewName)
+        os.rename(ff, newDirName)
+        openFilesList.append(newDirName)
+
+    outFiles = extractFiles(file_list=openFilesList, localDirPath=localDirPath)
 
     return outFiles
