@@ -13,7 +13,8 @@ def readEmbrace(files, station_list, usePandas, usePyTplot):
     tplot_vars = list()
     for station in station_list:
         out_dataFrame = list()
-        for f in files:
+        stationFiles = [x for x in files if station in x]
+        for f in stationFiles:
             logging.info(f)
             resolution_data = f.split('.')[-1][-1]
 
