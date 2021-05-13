@@ -186,6 +186,7 @@ def downloadEmbrace(url: str='',
             tex = tt.text
             if tex == 'Sorry, there are no files for these filters..':
                 logging.warning('No data')
+                download = False
                 break
             else:
                 logging.warning('There are data')
@@ -196,9 +197,9 @@ def downloadEmbrace(url: str='',
     if download == True:
         logging.info('Downloading Files')
         down = driver.find_element_by_id('downloads').click()
-
-    logging.info('Download Finished')
-
+    else:
+        logging.info('Files not found...')
+        driver.quit()
 
 
     time.sleep(3)
