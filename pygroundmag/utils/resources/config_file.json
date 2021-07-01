@@ -5,5 +5,5 @@
               "remote_data_dir": "http://www2.inpe.br/climaespacial/SpaceWeatherDataShare",
               "usr": "user",
               "pwd": "password",
-              "executable_path": "./pygroundmag/utils/resources/chromedriver_linux64/chromedriver"}
+              "executable_path": "./pygroundmag/utils/resources/chromedriver_linux64/chromedriver"
 }
