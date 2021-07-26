@@ -185,6 +185,9 @@ def convert_coords(date: str = '20210405',
 
 
     # igrf13: d, i, h, x, y, z, f
+    print(lat_long[0],
+    lat_long[1],
+    altitude_km, dt)
 
     cgm_lat, cgm_lon, cgm_r = aacgmv2.convert_latlon(lat_long[0],
                                                      lat_long[1],

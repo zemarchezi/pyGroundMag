@@ -1,8 +1,6 @@
 from typing import List
-import numpy as np
 from loguru import logger as logging
 import gzip
-import datetime
 from pygroundmag.utils.library_functions import *
 
 def readData(files, stations_list, usePyTplot, usePandas):

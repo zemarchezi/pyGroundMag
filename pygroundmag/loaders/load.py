@@ -1,8 +1,12 @@
+import datetime
+
 from pygroundmag.utils.dailynames import dailynames
 from pygroundmag.utils.download import download
 from pygroundmag.utils.download_embrace import downloadEmbrace
+from pygroundmag.utils.download_supermag import *
 from pygroundmag.networks.read_carisma import *
 from pygroundmag.networks.read_embrace import *
+from pygroundmag.networks.read_supermag import *
 from pathlib import Path
 import glob
 
@@ -24,6 +28,8 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
          usePyTplot: bool = False,
          config_file: dict = {}):
 
+    global files, vars
+
     remote_path = config_file[network]['remote_data_dir']
     logging.info(f'Remotepath: {remote_path}')
     local_path = str(Path.home().joinpath(config_file[network]['local_data_dir'], network))
@@ -33,6 +39,7 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
 
     out_files = []
     read_stations = []
+    read_data = {} # Only for Supermag
     for stat in station:
         if network == 'carisma':
             if if_cdf:
@@ -64,6 +71,29 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
             # dasr = trange[0].split('-')
             # pathformat = f"{remote_path}/{stat}/{dasr[0]}_{dasr[1]}_{dasr[2]}*/*.*m"
             # files = glob.glob(pathformat)
+        if network == 'supermag':
+
+            # exectSele = str(Path.home().joinpath(config_file[network]['executable_path']))
+            #
+            # print(exectSele)
+
+            logging.warning(f'Station  ---  {stat}')
+
+            start = datetime.datetime.strptime(trange[0], "%Y-%m-%d")
+            end = datetime.datetime.strptime(trange[1], "%Y-%m-%d")
+
+            startSup = f"{trange[0]}T00:00"
+
+            extendSeconds = (end-start).total_seconds()
+            (status, sm_data) = SuperMAGGetData(config_file[network]['usr'], startSup,
+                                                extendSeconds, flagstring='all', station=stat)
+
+            if status != 0:
+                if len(sm_data) > 1:
+                    read_data[stat] = sm_data
+                    files = ['stat']
+
+
 
         if files is not None and len(files) > 0:
             read_stations.append(stat)
@@ -84,6 +114,8 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
             vars = readData(out_files, read_stations, usePyTplot=usePyTplot, usePandas=usePandas)
         if network == 'embrace':
             vars = readEmbrace(out_files, read_stations, usePyTplot=usePyTplot, usePandas=usePandas)
+        if network == 'supermag':
+            vars = readSupermag(read_data, usePyTplot=usePyTplot, usePandas=usePandas)
 
         return vars
 
