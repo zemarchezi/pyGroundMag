@@ -79,13 +79,16 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
 
             logging.warning(f'Station  ---  {stat}')
 
-            start = datetime.datetime.strptime(trange[0], "%Y-%m-%d")
-            end = datetime.datetime.strptime(trange[1], "%Y-%m-%d")
+            
 
             if len(trange[0].split('0')) <= 1:
                 startSup = f"{trange[0]}T00:00"
+                start = datetime.datetime.strptime(trange[0], "%Y-%m-%d")
+                end = datetime.datetime.strptime(trange[1], "%Y-%m-%d")
             else:
                 startSup = trange[0]
+                start = datetime.datetime.strptime(trange[0], "%Y-%m-%dT%H:%M")
+                end = datetime.datetime.strptime(trange[1], "%Y-%m-%dT%H:%M")
 
             extendSeconds = (end-start).total_seconds()
             (status, sm_data) = SuperMAGGetData(config_file[network]['usr'], startSup,
