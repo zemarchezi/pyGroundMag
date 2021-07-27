@@ -81,7 +81,7 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
 
             
 
-            if len(trange[0].split('0')) <= 1:
+            if len(trange[0].split('T')) <= 1:
                 startSup = f"{trange[0]}T00:00"
                 start = datetime.datetime.strptime(trange[0], "%Y-%m-%d")
                 end = datetime.datetime.strptime(trange[1], "%Y-%m-%d")
