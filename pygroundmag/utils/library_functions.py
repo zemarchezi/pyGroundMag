@@ -130,20 +130,30 @@ def convert_coords(date: str = '20210405',
                    altitude_km: float = 100.):
     dt = datetime.datetime.strptime(date, '%Y%m%d')
     print(lat_long)
-    if dt.year <=2020:
-        mag = igrf12.igrf(dt, glat=float(lat_long[0]), glon=float(lat_long[1]), alt_km=altitude_km)
-        decl = mag['decl'].values[0]
-    else:
-        mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
-        mag = {'decl': mag[0],
-               'incl': mag[1],
-               'horiz': mag[2],
-               'north': mag[3],
-               'east': mag[4],
-               'down': mag[5],
-               'total': mag[6]
-        }
-        decl = mag['decl']
+    mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
+    mag = {'decl': mag[0],
+            'incl': mag[1],
+            'horiz': mag[2],
+            'north': mag[3],
+            'east': mag[4],
+            'down': mag[5],
+            'total': mag[6]
+    }
+    decl = mag['decl']
+    # if dt.year <=2020:
+    #     mag = igrf12.igrf(dt, glat=float(lat_long[0]), glon=float(lat_long[1]), alt_km=altitude_km)
+    #     decl = mag['decl'].values[0]
+    # else:
+    #     mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
+    #     mag = {'decl': mag[0],
+    #            'incl': mag[1],
+    #            'horiz': mag[2],
+    #            'north': mag[3],
+    #            'east': mag[4],
+    #            'down': mag[5],
+    #            'total': mag[6]
+    #     }
+    #     decl = mag['decl']
 
 
     # igrf13: d, i, h, x, y, z, f
