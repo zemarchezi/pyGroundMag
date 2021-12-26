@@ -60,44 +60,6 @@ def fill_nan(A):
     return B
 
 
-# convert the coordinate system from gse to field aligned system
-def rotate_field_fac(x, y, z, bx, by, bz, ex, ey, ez):
-    '''
-    rotate the fields into Field Alignet Coordinate System
-
-    data: pandas dataframe with the columns: 'x', 'y', 'ex', 'ey', 'ez', 'bx', 'by', 'bz'
-    '''
-    x = x.values
-    y = y.values
-    z = z.values
-    v1x = np.transpose(ex)
-    v1y = ey
-    v1z = ez
-    bx = bx.values
-    by = by.values
-    bz = bz.values
-
-    # v1p = v1a = v1r = bp = ba = br = r =  b_fac = b_orig = np.zeros((len(x)))
-    tempB = np.zeros((len(x), 3))
-    tempE = np.zeros((len(x), 3))
-    for i in range(0, len(x)):
-        Jac = np.zeros((3, 3))
-        r = [x[i], y[i], z[i]] / np.sqrt(x[i] * x[i] + y[i] * y[i] + z[i] * z[i])
-        Jac[0, :] = [bx[i], by[i], bz[i]] / np.sqrt(bx[i] * bx[i] + by[i] * by[i] + bz[i] * bz[i])
-        Jac[1, :] = crossD(Jac[0, :], r) / normD(crossD(Jac[0, :], r))
-        Jac[2, :] = crossD(Jac[1, :], Jac[0, :]) / normD(crossD(Jac[1, :], Jac[0, :]))
-        # apply rotation for B
-        tempB[i, :] = np.dot(Jac, ([bx[i], by[i], bz[i]]))
-        # Apply the rotation for vector V1
-        tempE[i, :] = np.dot(Jac, ([v1x[i], v1y[i], v1z[i]]))
-    #        # testing whether the rotation is correct
-    #        tempFields['b_fac'][i] = np.linalg.norm([tempFields['bp'][i], tempFields['ba'][i], tempFields['br'][i]])
-    #        tempFields['b_orig'][i] = np.linalg.norm([bx[i], by[i], bz[i]])
-
-    return (pd.DataFrame(np.transpose([tempB[:, 0], tempB[:, 1], tempB[:, 2], tempE[:, 0], tempE[:, 1], tempE[:, 2]]),
-                         columns=['bp', 'ba', 'br', 'v1p', 'v1a', 'v1r']))
-
-
 def l_dipole(cgm_lat):
     return 1. / (np.cos(np.deg2rad(cgm_lat)) ** 2.)
 
@@ -168,20 +130,30 @@ def convert_coords(date: str = '20210405',
                    altitude_km: float = 100.):
     dt = datetime.datetime.strptime(date, '%Y%m%d')
     print(lat_long)
-    if dt.year <=2020:
-        mag = igrf12.igrf(dt, glat=float(lat_long[0]), glon=float(lat_long[1]), alt_km=altitude_km)
-        decl = mag['decl'].values[0]
-    else:
-        mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
-        mag = {'decl': mag[0],
-               'incl': mag[1],
-               'horiz': mag[2],
-               'north': mag[3],
-               'east': mag[4],
-               'down': mag[5],
-               'total': mag[6]
-        }
-        decl = mag['decl']
+    mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
+    mag = {'decl': mag[0],
+            'incl': mag[1],
+            'horiz': mag[2],
+            'north': mag[3],
+            'east': mag[4],
+            'down': mag[5],
+            'total': mag[6]
+    }
+    decl = mag['decl']
+    # if dt.year <=2020:
+    #     mag = igrf12.igrf(dt, glat=float(lat_long[0]), glon=float(lat_long[1]), alt_km=altitude_km)
+    #     decl = mag['decl'].values[0]
+    # else:
+    #     mag = pyIGRF.igrf_value(lat=float(lat_long[0]), lon=float(lat_long[1]), alt=altitude_km, year=dt.year)
+    #     mag = {'decl': mag[0],
+    #            'incl': mag[1],
+    #            'horiz': mag[2],
+    #            'north': mag[3],
+    #            'east': mag[4],
+    #            'down': mag[5],
+    #            'total': mag[6]
+    #     }
+    #     decl = mag['decl']
 
 
     # igrf13: d, i, h, x, y, z, f
