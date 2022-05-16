@@ -5,7 +5,8 @@
   },
   "embrace": {
     "local_data_dir": "mag_data/",
-    "remote_data_dir": "http://www2.inpe.br/climaespacial/SpaceWeatherDataShare",
+    "remote_data_dir_Sel": "http://www2.inpe.br/climaespacial/SpaceWeatherDataShare",
+    "remote_data_dir": "https://embracedata.inpe.br/",
     "usr": "user",
     "pwd": "password",
     "executable_path": "./pygroundmag/utils/resources/chromedriver_linux64/chromedriver"

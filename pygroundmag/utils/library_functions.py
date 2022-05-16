@@ -183,3 +183,29 @@ def convert_coords(date: str = '20210405',
     }
 
     return out_dict
+
+
+def change_monthNamesEmbrace(string):
+    dictMonthEnglish = {"jan":"jan",
+                    "fev":"feb",
+                    "mar":"mar",
+                    "abr":"apr",
+                    'mai':'may',
+                    "jun":"jun",
+                    "jul":"jul",
+                    "ago":"aug",
+                    "set":"sep",
+                    "out":"oct",
+                    "nov":"nov",
+                    "dez":"dec"
+                     }
+    listmonthsPt = list(dictMonthEnglish.keys())
+    splitString = string.split(".")
+    month = splitString[0][-3:]
+    if month in listmonthsPt:
+        monthEng = dictMonthEnglish[month]
+        tempdirSplit = splitString[0].split(month)
+        newDir = tempdirSplit[0] + monthEng
+        return f"{newDir}.{splitString[1]}"
+    else:
+        return string

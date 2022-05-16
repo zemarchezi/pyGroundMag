@@ -4,6 +4,7 @@ from pygroundmag.utils.dailynames import dailynames
 from pygroundmag.utils.download import download
 from pygroundmag.utils.download_embrace import downloadEmbrace
 from pygroundmag.utils.download_supermag import *
+from pygroundmag.utils.library_functions import change_monthNamesEmbrace
 from pygroundmag.networks.read_carisma import *
 from pygroundmag.networks.read_embrace import *
 from pygroundmag.networks.read_supermag import *
@@ -11,6 +12,7 @@ from pathlib import Path
 import glob
 
 # %%
+
 def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
          magnetometer: str = 'FGM',
          cadence: str = '1Hz',
@@ -26,6 +28,7 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
          time_clip: bool = False,
          usePandas: bool = True,
          usePyTplot: bool = False,
+         useSeleniumDownload: bool = False,
          config_file: dict = {}):
 
     global files, vars
@@ -56,18 +59,25 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
             # exectSele = str(Path.home().joinpath(config_file[network]['executable_path']))
             #
             # print(exectSele)
-
+            
             logging.warning(f'Station  ---  {stat}')
             print(config_file[network]['executable_path'])
-            files = downloadEmbrace(url=remote_path,
-                     instrument=magnetometer, station=stat,
-                     username=config_file[network]['usr'],
-                     password=config_file[network]['pwd'],
-                     trange=trange,
-                     downloadDir=f'{local_path}/temp_download',
-                     localDirPath=f'{local_path}/mag',
-                     executable_path=config_file[network]['executable_path'])
+            if useSeleniumDownload:
+                files = downloadEmbrace(url=remote_path,
+                        instrument=magnetometer, station=stat,
+                        username=config_file[network]['usr'],
+                        password=config_file[network]['pwd'],
+                        trange=trange,
+                        downloadDir=f'{local_path}/temp_download',
+                        localDirPath=f'{local_path}/mag',
+                        executable_path=config_file[network]['executable_path'])
 
+            else:
+                pathformat = f"{magnetometer}/{stat.upper()}/%Y/{stat.lower()}%d%b.%ym"
+                remote_names = dailynames(file_format=pathformat, trange=trange)
+                remote_names = [change_monthNamesEmbrace(i) for i in remote_names]
+                files = download(remote_file=remote_names, remote_path=remote_path,
+                             local_path=local_path, no_download=no_update)
             # dasr = trange[0].split('-')
             # pathformat = f"{remote_path}/{stat}/{dasr[0]}_{dasr[1]}_{dasr[2]}*/*.*m"
             # files = glob.glob(pathformat)
