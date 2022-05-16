@@ -4,7 +4,6 @@ import numpy as np
 from numpy import pi, cos, sin, arctan2, sqrt, dot
 import datetime
 import pandas as pd
-import igrf12
 import pyIGRF
 import aacgmv2
 
