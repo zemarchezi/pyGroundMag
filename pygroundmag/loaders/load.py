@@ -63,6 +63,7 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
             logging.warning(f'Station  ---  {stat}')
             print(config_file[network]['executable_path'])
             if useSeleniumDownload:
+                remote_path = config_file[network]['remote_data_dir_Sel']
                 files = downloadEmbrace(url=remote_path,
                         instrument=magnetometer, station=stat,
                         username=config_file[network]['usr'],
