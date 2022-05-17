@@ -207,4 +207,6 @@ def change_monthNamesEmbrace(string):
         newDir = tempdirSplit[0] + monthEng
         return f"{newDir}.{splitString[1]}"
     else:
-        return string
+        tempdirSplit = splitString[0].split(month)
+        newDir = tempdirSplit[0] + month.lower()
+        return f"{newDir}.{splitString[1]}"

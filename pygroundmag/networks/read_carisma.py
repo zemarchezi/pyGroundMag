@@ -47,15 +47,11 @@ def readData(files, stations_list, usePyTplot, usePandas):
             logging.info(first_line)
             logging.warning(reference_date)
             logging.warning([latitude_geo, longitude_geo])
+
             dict_coords = convert_coords(date=reference_date,
                                          lat_long=[float(latitude_geo), float(longitude_geo)],
                                          altitude_km=100.)
-            dict_coords = {'cgm_latitude': 62.50498515034671,
-                            'cgm_longitude': 347.8549155323728,
-                            'declination': -7.5654559259738265,
-                            'lshell': 4.691740586409465,
-                            'mlt_midnight': 6.0422559756316545,
-                            'mlt_ut': 17.957744024368345}
+            
             dec = float(dict_coords['declination'])
 
             temp_h = temp_x.astype(float) * np.cos(np.deg2rad(dec)) + \
