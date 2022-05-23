@@ -1,4 +1,4 @@
-
+#%%
 import selenium
 import selenium.webdriver
 from selenium.webdriver.chrome.options import Options
@@ -34,7 +34,7 @@ def extractFiles(file_list: list=[], localDirPath:str=''):
 
     return outFilesList
 
-
+#%%
 
 def downloadEmbrace(url: str='',
                      instrument: str='Magnetometer',
