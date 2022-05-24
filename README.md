@@ -6,7 +6,10 @@
 
 Python 3.8+
 
-Pandas, NumPy, wget, requests, cdflib, pytplot
+1. Clone or download the pyGroundMag
+2. From the pyGroundMag directory: 
+
+Installation: ```pip instal -e .```
 
 ***
 ### Chrome Driver
@@ -17,10 +20,6 @@ The Chromedriver can be downloaded at: https://chromedriver.chromium.org/downloa
 
 download and unzip the file to:
 ```pygroundmag/utils/resources/chromedriver_linux64/```
-
-***
-
-Installation: ```pip instal -e .```
 
 ***
 ## config_file.json
