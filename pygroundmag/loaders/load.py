@@ -17,7 +17,7 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
          magnetometer: str = 'FGM',
          cadence: str = '1Hz',
          station: list = ['FCHU'],
-         if_cdf: bool = False,
+         txt_gz_cdf: str = 'gz',
          network: str = 'carisma',
          get_support_data: bool = False,
          varformat: str = None,
@@ -45,10 +45,12 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
     read_data = {} # Only for Supermag
     for stat in station:
         if network == 'carisma':
-            if if_cdf:
+            if txt_gz_cdf == 'cdf':
                 pathformat = f"{magnetometer}/CDF{cadence}/%Y/%m/%d/CARISMA_{magnetometer}_{cadence.lower()}_{stat.lower()}_%Y%m%d_v01.cdf"
-            else:
+            elif txt_gz_cdf == 'gz':
                 pathformat = f"{magnetometer}/{cadence}/%Y/%m/%d/%Y%m%d{stat}.F01.gz"
+            elif txt_gz_cdf == 'txt':
+                pathformat = f"{magnetometer}/{cadence}/%Y/%m/%d/%Y%m%d{stat}.F01"
             # find the full remote path names using the trange
             remote_names = dailynames(file_format=pathformat, trange=trange)
 
