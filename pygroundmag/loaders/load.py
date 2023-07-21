@@ -79,7 +79,7 @@ def load_mag(trange: list = ['2018-11-5', '2018-11-6'],
                 pathformat = f"{magnetometer}/{stat.upper()}/%Y/{stat.lower()}%d%b.%ym"
                 remote_names = dailynames(file_format=pathformat, trange=trange)
                 remote_names = [change_monthNamesEmbrace(i) for i in remote_names]
-                files = download(remote_file=remote_names, remote_path=remote_path,
+                files = download(remote_file=remote_names, remote_path=remote_path, verify=False,
                              local_path=local_path, no_download=no_update)
             # dasr = trange[0].split('-')
             # pathformat = f"{remote_path}/{stat}/{dasr[0]}_{dasr[1]}_{dasr[2]}*/*.*m"
